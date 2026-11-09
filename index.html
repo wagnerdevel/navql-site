@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NavQL — Navigate all your data</title>
+<meta name="description" content="NavQL is a database client for MySQL, PostgreSQL, MongoDB and SQLite. Browse tables and collections, edit records and run queries, fast.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:title" content="NavQL">
+<meta property="og:description" content="All your databases, one place. MySQL, PostgreSQL, MongoDB and SQLite.">
+<meta name="theme-color" content="#0A0A0B">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Brand tokens (navql-brand/tokens) */
+    --onix: #0A0A0B;
+    --grafite: #18181B;
+    --papel: #FAFAFA;
+    --ciano: #22D3EE;
+    --azul: #4F7CFF;
+    --violeta: #8B5CF6;
+    --azul-texto: #2F5BEA;
+
+    --sans: Geist, system-ui, -apple-system, sans-serif;
+    --mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    --line: rgba(255,255,255,.08);
+    --line-strong: rgba(255,255,255,.14);
+    --muted: #A1A1AA;
+    --dim: #71717A;
+    --max: 1180px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--onix);
+    color: var(--papel);
+    font: 400 16px/1.625 var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; height: auto; display: block; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+  .mono { font-family: var(--mono); }
+  .eyebrow { font: 400 13px/1 var(--mono); color: var(--ciano); letter-spacing: .02em; }
+  .ql { color: var(--ciano); }
+
+  /* Nav */
+  header.nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(10,10,11,.72);
+    backdrop-filter: saturate(160%) blur(14px);
+    -webkit-backdrop-filter: saturate(160%) blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .nav .logo img { height: 28px; width: auto; } /* above the 24 px minimum */
+  .nav nav { display: flex; gap: 28px; align-items: center; font-size: 14px; color: var(--muted); }
+  .nav nav a:hover { color: var(--papel); }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 40px; padding: 0 18px; border-radius: 10px;
+    font: 500 14px/1 var(--sans); white-space: nowrap;
+    transition: background .15s, border-color .15s, transform .15s;
+  }
+  .btn-primary { background: var(--azul); color: #fff; }
+  .btn-primary:hover { background: #3f6cf5; }
+  .btn-ghost { border: 1px solid var(--line-strong); color: var(--papel); }
+  .btn-ghost:hover { border-color: rgba(255,255,255,.3); }
+  .btn-lg { height: 48px; padding: 0 22px; font-size: 15px; border-radius: 12px; }
+  .nav .btn { height: 36px; color: #fff; }
+
+  /* Hero */
+  .hero { position: relative; overflow: hidden; padding: 96px 0 0; }
+  .hero-discs {
+    position: absolute; right: -180px; top: -10px; width: 620px; opacity: .9;
+    pointer-events: none; overflow: visible;
+    transform: translate3d(var(--px, 0px), var(--py, 0px), 0);
+    transition: transform .6s cubic-bezier(.2,.7,.2,1);
+  }
+  /* The discs drop in one by one, in icon order (violet at the bottom, cyan on top),
+     then float with a slight lag between layers. */
+  .disc { transform-box: view-box; }
+  .disc .glow { filter: blur(14px); opacity: 0; }
+  .d3 { animation: drop .9s cubic-bezier(.2,.9,.25,1.15) .15s both, float3 7s ease-in-out 1.6s infinite; }
+  .d2 { animation: drop .9s cubic-bezier(.2,.9,.25,1.15) .35s both, float2 7s ease-in-out 1.8s infinite; }
+  .d1 { animation: drop .9s cubic-bezier(.2,.9,.25,1.15) .55s both, float1 7s ease-in-out 2s infinite; }
+  .d1 .glow { animation: glow 7s ease-in-out 2s infinite; }
+  @keyframes drop {
+    from { transform: translateY(-70px); opacity: 0; }
+    60% { opacity: 1; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes float1 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+  @keyframes float2 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+  @keyframes float3 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+  @keyframes glow { 0%,100% { opacity: 0; } 50% { opacity: .55; } }
+
+  /* Download icon: the discs spread apart on hover */
+  .download .icon-wrap { width: 112px; margin: 0 auto 32px; }
+  .download .icon-wrap svg { display: block; width: 112px; height: 112px; border-radius: 26px; box-shadow: 0 30px 80px -20px rgba(34,211,238,.35); }
+  .download .icon-wrap ellipse { transform-box: view-box; transition: transform .5s cubic-bezier(.2,.9,.25,1.3); }
+  .download .icon-wrap:hover .i1 { transform: translateY(-7px); }
+  .download .icon-wrap:hover .i3 { transform: translateY(5px); }
+  /* On entering the viewport, the discs "breathe" once */
+  .download.in-view .i1 { animation: breathe1 1.2s cubic-bezier(.3,.8,.3,1) .2s; }
+  .download.in-view .i3 { animation: breathe3 1.2s cubic-bezier(.3,.8,.3,1) .2s; }
+  @keyframes breathe1 { 40% { transform: translateY(-8px); } }
+  @keyframes breathe3 { 40% { transform: translateY(6px); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .disc, .disc .glow, .download .i1, .download .i3 { animation: none !important; }
+    .hero-discs { transform: none !important; }
+  }
+  .hero-copy { position: relative; max-width: 720px; }
+  .hero h1 {
+    font: 700 clamp(44px, 7vw, 84px)/1.02 var(--sans);
+    letter-spacing: -.035em; margin: 20px 0 24px;
+  }
+  .hero p.lead { font-size: 19px; line-height: 1.6; color: var(--muted); max-width: 560px; margin: 0 0 36px; }
+  .hero .ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+  .hero .meta { margin-top: 18px; font: 400 13px/1.4 var(--mono); color: var(--dim); }
+  .hero-shot { position: relative; margin-top: 72px; }
+
+  /* App window */
+  .window {
+    border-radius: 14px; overflow: hidden;
+    background: var(--grafite);
+    border: 1px solid var(--line-strong);
+    box-shadow: 0 40px 120px -30px rgba(79,124,255,.35), 0 0 0 1px rgba(0,0,0,.4);
+  }
+  .window-bar { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border-bottom: 1px solid var(--line); background: #141417; }
+  .window-bar i { width: 11px; height: 11px; border-radius: 50%; background: #3f3f46; }
+  .window-bar span { margin-left: 10px; font: 500 12px/1 var(--sans); color: var(--muted); display: flex; align-items: center; gap: 6px; }
+  .window-bar span img { width: 14px; height: 14px; }
+  .hero-shot .window { border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-bottom: 0; }
+  .hero-shot::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 35%;
+    background: linear-gradient(to bottom, rgba(10,10,11,0), var(--onix));
+  }
+
+  /* Supported databases */
+  .dbs { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .dbs .wrap { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-top: 28px; padding-bottom: 28px; flex-wrap: wrap; }
+  .dbs p { margin: 0; font: 400 13px/1 var(--mono); color: var(--dim); }
+  .dbs ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 36px; flex-wrap: wrap; }
+  .dbs li { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 17px; }
+  .dbs li i { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* Sections */
+  section { padding: 120px 0; }
+  .section-head { max-width: 640px; margin-bottom: 56px; }
+  h2 { font: 700 clamp(32px, 4.4vw, 48px)/1.08 var(--sans); letter-spacing: -.03em; margin: 16px 0 16px; }
+  .section-head p { color: var(--muted); font-size: 17px; margin: 0; }
+
+  /* Pillars */
+  .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .pillar { background: var(--grafite); border: 1px solid var(--line); border-radius: 16px; padding: 28px; }
+  .pillar .bar { width: 32px; height: 8px; border-radius: 4px; margin-bottom: 20px; }
+  .pillar h3 { font: 600 22px/1.3 var(--sans); margin: 0 0 8px; letter-spacing: -.01em; }
+  .pillar p { margin: 0; color: var(--muted); font-size: 15px; }
+
+  /* Gallery */
+  .tour { background: linear-gradient(to bottom, var(--onix), #0e0e11 40%, var(--onix)); }
+  .tabs { display: flex; gap: 6px; padding: 5px; background: var(--grafite); border: 1px solid var(--line); border-radius: 12px; width: fit-content; margin-bottom: 28px; flex-wrap: wrap; }
+  .tabs button {
+    appearance: none; border: 0; background: transparent; color: var(--muted);
+    font: 500 14px/1 var(--sans); height: 36px; padding: 0 16px; border-radius: 8px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .tabs button i { width: 8px; height: 8px; border-radius: 50%; opacity: .5; }
+  .tabs button[aria-selected="true"] { background: #26262b; color: var(--papel); }
+  .tabs button[aria-selected="true"] i { opacity: 1; }
+  .tabs button:focus-visible { outline: 2px solid var(--azul); outline-offset: 2px; }
+  .tour-grid { display: grid; grid-template-columns: 1fr 300px; gap: 40px; align-items: start; }
+  .tour-copy h3 { font: 600 24px/1.25 var(--sans); margin: 0 0 12px; letter-spacing: -.015em; }
+  .tour-copy p { color: var(--muted); margin: 0 0 20px; font-size: 15px; }
+  .tour-copy ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; font-size: 14px; color: #d4d4d8; }
+  .tour-copy li { display: flex; gap: 10px; }
+  .tour-copy li::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--ciano); margin-top: 9px; }
+  .panel[hidden] { display: none; }
+
+  /* Features */
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+  .feature { padding: 32px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .feature:nth-child(3n) { border-right: 0; }
+  .feature:nth-last-child(-n+3) { border-bottom: 0; }
+  .feature .ico { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: var(--grafite); border: 1px solid var(--line); margin-bottom: 20px; }
+  .feature .ico svg { width: 20px; height: 20px; }
+  .feature h3 { font: 600 17px/1.3 var(--sans); margin: 0 0 8px; }
+  .feature p { margin: 0; color: var(--muted); font-size: 15px; }
+
+  /* Code */
+  .code-band { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  .code {
+    background: var(--grafite); border: 1px solid var(--line); border-radius: 16px; padding: 28px;
+    font: 400 15px/1.75 var(--mono); color: #e4e4e7; overflow-x: auto; white-space: pre;
+  }
+  .code .k { color: #a1a1aa; }
+  .code .t { color: var(--ciano); }
+  .code .n { color: var(--violeta); }
+  .code .s { color: var(--azul); }
+  .code-band img.shot { border-radius: 14px; border: 1px solid var(--line-strong); }
+
+  /* Download */
+  .download { text-align: center; position: relative; overflow: hidden; }
+  .download .icon { width: 112px; margin: 0 auto 32px; border-radius: 26px; box-shadow: 0 30px 80px -20px rgba(34,211,238,.35); }
+  .download h2 { margin: 0 0 16px; }
+  .download > .wrap > p { color: var(--muted); font-size: 17px; margin: 0 auto 40px; max-width: 520px; }
+  .platforms { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 840px; margin: 0 auto; text-align: left; }
+  .platform { background: var(--grafite); border: 1px solid var(--line); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 4px; transition: border-color .15s, transform .15s; }
+  .platform:hover { border-color: rgba(79,124,255,.6); transform: translateY(-2px); }
+  .platform strong { font-size: 17px; font-weight: 600; }
+  .platform span { color: var(--dim); font: 400 13px/1.5 var(--mono); }
+  .platform em { margin-top: 14px; font-style: normal; color: var(--azul); font-size: 14px; font-weight: 500; }
+
+  footer { border-top: 1px solid var(--line); padding: 40px 0; }
+  footer .wrap { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+  footer img { height: 24px; width: auto; }
+  footer p { margin: 0; color: var(--dim); font-size: 13px; }
+
+  /* Responsive */
+  @media (max-width: 960px) {
+    .tour-grid, .code-band { grid-template-columns: 1fr; }
+    .tour-copy { order: -1; }
+    .features { grid-template-columns: repeat(2, 1fr); }
+    .feature:nth-child(3n) { border-right: 1px solid var(--line); }
+    .feature:nth-child(2n) { border-right: 0; }
+    .feature:nth-last-child(-n+3) { border-bottom: 1px solid var(--line); }
+    .feature:nth-last-child(-n+2) { border-bottom: 0; }
+  }
+  @media (max-width: 720px) {
+    .wrap { padding: 0 16px; }
+    .nav nav a:not(.btn) { display: none; }
+    .hero { padding-top: 64px; }
+    .hero-discs { width: 300px; right: -150px; top: -120px; opacity: .35; }
+    .hero-shot { margin-top: 48px; }
+    section { padding: 80px 0; }
+    .pillars, .platforms, .features { grid-template-columns: 1fr; }
+    .feature, .feature:nth-child(n) { border-right: 0; border-bottom: 1px solid var(--line); }
+    .feature:last-child { border-bottom: 0; }
+    .dbs ul { gap: 20px; }
+    .window-bar { height: 28px; }
+    .tabs { width: 100%; flex-wrap: nowrap; gap: 2px; }
+    .tabs button { flex: 1; justify-content: center; padding: 0 6px; font-size: 13px; gap: 6px; }
+    .tabs button i { display: none; }
+    .code { font-size: 13px; padding: 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="#" aria-label="NavQL — home"><img src="assets/navql-logo-fundo-escuro.svg" alt="NavQL" width="92" height="28"></a>
+    <nav>
+      <a href="#tour">Tour</a>
+      <a href="#features">Features</a>
+      <a href="#download" class="btn btn-primary">Download</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero" style="padding-bottom:0">
+    <svg class="hero-discs" viewBox="10 10 100 100" aria-hidden="true" focusable="false">
+      <g class="disc d3"><ellipse class="glow" cx="60" cy="90" rx="50" ry="16" fill="#8B5CF6"/><ellipse cx="60" cy="90" rx="50" ry="16" fill="#8B5CF6"/></g>
+      <g class="disc d2"><ellipse class="glow" cx="60" cy="66" rx="50" ry="16" fill="#4F7CFF"/><ellipse cx="60" cy="66" rx="50" ry="16" fill="#4F7CFF"/></g>
+      <g class="disc d1"><ellipse class="glow" cx="60" cy="42" rx="50" ry="16" fill="#22D3EE"/><ellipse cx="60" cy="42" rx="50" ry="16" fill="#22D3EE"/></g>
+    </svg>
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="eyebrow">Database client · macOS, Windows and Linux</span>
+        <h1>Navigate all your data.</h1>
+        <p class="lead">MySQL, PostgreSQL, MongoDB and SQLite in one clean, focused place. Browse tables and collections, edit records and run queries, fast.</p>
+        <div class="ctas">
+          <a href="#download" class="btn btn-primary btn-lg">Download NavQL</a>
+          <a href="#tour" class="btn btn-ghost btn-lg">See the app</a>
+        </div>
+        <p class="meta">v0.1.0 · free</p>
+      </div>
+      <div class="hero-shot">
+        <div class="window">
+          <div class="window-bar"><i></i><i></i><i></i><span><img src="assets/navql-icone.svg" alt="">NavQL</span></div>
+          <img src="assets/shots/table.png" alt="NavQL showing the customers table of a PostgreSQL database, with the list of tables and views on the left" width="2880" height="1800">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="dbs">
+    <div class="wrap">
+      <p>Connect the databases you already use</p>
+      <ul>
+        <li><i style="background:var(--ciano)"></i>MySQL</li>
+        <li><i style="background:var(--azul)"></i>PostgreSQL</li>
+        <li><i style="background:var(--violeta)"></i>MongoDB</li>
+        <li><i style="background:#a1a1aa"></i>SQLite</li>
+      </ul>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">01 — Why NavQL</span>
+        <h2>All your databases, one place.</h2>
+        <p>Different databases, stacked together like the layers of the icon. No more switching tools for every project.</p>
+      </div>
+      <div class="pillars">
+        <article class="pillar">
+          <div class="bar" style="background:var(--ciano)"></div>
+          <h3>Precise</h3>
+          <p>Clean shapes and noise-free information, like a good query. You see the data, not the tool.</p>
+        </article>
+        <article class="pillar">
+          <div class="bar" style="background:var(--azul)"></div>
+          <h3>Fast</h3>
+          <p>A virtualized grid that opens thousands of rows instantly, keyboard shortcuts for everything and queries in milliseconds.</p>
+        </article>
+        <article class="pillar">
+          <div class="bar" style="background:var(--violeta)"></div>
+          <h3>Versatile</h3>
+          <p>SQL and documents side by side: tables, views, functions and collections in the same interface.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="tour" id="tour">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">02 — Tour</span>
+        <h2>Built for everyday data work.</h2>
+        <p>From your connection list to a finished query, just a few clicks away.</p>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="NavQL screens">
+        <button role="tab" id="t-conn" aria-controls="p-conn" aria-selected="true"><i style="background:var(--ciano)"></i>Connections</button>
+        <button role="tab" id="t-data" aria-controls="p-data" aria-selected="false" tabindex="-1"><i style="background:var(--azul)"></i>Data</button>
+        <button role="tab" id="t-query" aria-controls="p-query" aria-selected="false" tabindex="-1"><i style="background:var(--violeta)"></i>Queries</button>
+        <button role="tab" id="t-struct" aria-controls="p-struct" aria-selected="false" tabindex="-1"><i style="background:#a1a1aa"></i>Structure</button>
+      </div>
+
+      <div class="panel" id="p-conn" role="tabpanel" aria-labelledby="t-conn">
+        <div class="tour-grid">
+          <div class="window"><div class="window-bar"><i></i><i></i><i></i></div>
+            <img src="assets/shots/connections.png" alt="NavQL home screen with five connections: PostgreSQL, SQLite, MySQL and MongoDB, each with its own color and tag" loading="lazy" width="2880" height="1800"></div>
+          <div class="tour-copy">
+            <h3>Every connection at a glance</h3>
+            <p>Each connection gets its own color and tag, so you never mistake production for development.</p>
+            <ul>
+              <li>Tags like <span class="mono">production</span>, <span class="mono">staging</span> and <span class="mono">local</span></li>
+              <li>New connection from a form, a URL or a SQLite file</li>
+              <li>Built-in SSH tunnel and SSL</li>
+              <li>Fully keyboard navigable</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="p-data" role="tabpanel" aria-labelledby="t-data" hidden>
+        <div class="tour-grid">
+          <div class="window"><div class="window-bar"><i></i><i></i><i></i></div>
+            <img src="assets/shots/table.png" alt="Data grid of the customers table with 1,200 rows" loading="lazy" width="2880" height="1800"></div>
+          <div class="tour-copy">
+            <h3>Data in a fast grid</h3>
+            <p>Open a table and scroll through thousands of rows without a stutter. Edit cells, add rows and apply filters.</p>
+            <ul>
+              <li>Virtualized grid with pagination</li>
+              <li>Inline editing with a review before saving</li>
+              <li>Per-column filters and sorting</li>
+              <li>Export your results</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="p-query" role="tabpanel" aria-labelledby="t-query" hidden>
+        <div class="tour-grid">
+          <div class="window"><div class="window-bar"><i></i><i></i><i></i></div>
+            <img src="assets/shots/query.png" alt="Query editor with a SELECT grouping revenue by city and the result below" loading="lazy" width="2880" height="1800"></div>
+          <div class="tour-copy">
+            <h3>A real SQL editor</h3>
+            <p>Write, format and run queries with autocomplete that knows your schema.</p>
+            <ul>
+              <li>Run the current query or all of them at once</li>
+              <li>Explain, Beautify and saved queries</li>
+              <li>History of everything you ran</li>
+              <li>AI assistant to write and explain SQL</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="p-struct" role="tabpanel" aria-labelledby="t-struct" hidden>
+        <div class="tour-grid">
+          <div class="window"><div class="window-bar"><i></i><i></i><i></i></div>
+            <img src="assets/shots/structure.png" alt="Structure of the customers table: columns, types, indexes and foreign keys" loading="lazy" width="2880" height="1800"></div>
+          <div class="tour-copy">
+            <h3>Structure, demystified</h3>
+            <p>Columns, types, indexes and foreign keys for every table, plus the full DDL.</p>
+            <ul>
+              <li>Add columns and indexes from the UI</li>
+              <li>DDL ready to copy</li>
+              <li>Views, functions and procedures in the sidebar</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">03 — Features</span>
+        <h2>The essentials, done right.</h2>
+      </div>
+      <div class="features">
+        <div class="feature">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <h3>SSH tunnel and SSL</h3>
+          <p>Reach databases on private networks without opening ports. Secrets are stored with AES-256 encryption.</p>
+        </div>
+        <div class="feature">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#4F7CFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg></div>
+          <h3>Safe mode</h3>
+          <p>Read-only connections and a confirmation step before commands that change production data.</p>
+        </div>
+        <div class="feature">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></div>
+          <h3>AI assistant</h3>
+          <p>Describe what you need and get ready-to-run SQL, using your database schema as context.</p>
+        </div>
+        <div class="feature">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></div>
+          <h3>Backups</h3>
+          <p>One-click dumps of PostgreSQL, MySQL and MongoDB, with progress tracking and download.</p>
+        </div>
+        <div class="feature">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#4F7CFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 15l3-3-3-3M13 15h4"/></svg></div>
+          <h3>Keyboard first</h3>
+          <p>Open any table with <span class="mono">⌘P</span>, start a query with <span class="mono">⌥T</span> and run it with <span class="mono">⌘↵</span>.</p>
+        </div>
+        <div class="feature">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg></div>
+          <h3>Export</h3>
+          <p>Export results to CSV, JSON or SQL and share them without copy-pasting.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap code-band">
+      <div>
+        <span class="eyebrow">04 — Queries</span>
+        <h2>Ask. NavQL answers.</h2>
+        <p style="color:var(--muted);font-size:17px;margin:0 0 28px">From a quick <span class="mono">SELECT</span> to a report full of <span class="mono">JOIN</span>s, results show up right below, ready to filter, edit or export.</p>
+        <div class="code" aria-label="Sample SQL query"><span class="k">SELECT</span> name, email
+<span class="k">FROM</span> <span class="t">customers</span>
+<span class="k">WHERE</span> plan = <span class="s">'pro'</span>
+<span class="k">LIMIT</span> <span class="n">50</span>;</div>
+      </div>
+      <img class="shot" src="assets/shots/query.png" alt="Result of a query grouped by city in NavQL" loading="lazy" width="2880" height="1800">
+    </div>
+  </section>
+
+  <section class="download" id="download">
+    <div class="wrap">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 120 120" role="img" aria-label="NavQL icon">
+          <defs><clipPath id="dl-clip"><rect width="120" height="120" rx="28"/></clipPath></defs>
+          <g clip-path="url(#dl-clip)">
+            <rect width="120" height="120" fill="#0A0A0B"/>
+            <ellipse class="i3" cx="88" cy="102" rx="44" ry="14" fill="#8B5CF6"/>
+            <ellipse class="i2" cx="88" cy="84" rx="44" ry="14" fill="#4F7CFF"/>
+            <ellipse class="i1" cx="88" cy="66" rx="44" ry="14" fill="#22D3EE"/>
+          </g>
+          <path d="M18.442 50.0V26.57H23.986L33.292 42.74V26.57H38.308V50.0H32.698L23.458 34.391V50.0Z" fill="#FFFFFF"/><path d="M58.06100000000001 52.046 56.246 49.769Q54.629000000000005 50.528 52.055 50.528Q48.59 50.528 46.04900000000001 48.960499999999996Q43.508 47.393 42.122 44.6375Q40.736000000000004 41.882 40.736000000000004 38.318Q40.736000000000004 34.82 42.039500000000004 32.048Q43.343 29.276 45.86750000000001 27.659Q48.392 26.041999999999998 52.055 26.041999999999998Q55.718 26.041999999999998 58.226 27.659Q60.734 29.276 62.0375 32.048Q63.341 34.82 63.341 38.318Q63.341 41.585 62.2355 44.06Q61.13 46.535 59.084 48.185L62.18600000000001 52.046ZM52.055 46.304Q52.979 46.304 53.540000000000006 46.073L50.273 42.08H54.431000000000004L56.147000000000006 44.357Q57.104 43.433 57.632000000000005 41.9645Q58.160000000000004 40.495999999999995 58.160000000000004 38.318Q58.160000000000004 36.173 57.51650000000001 34.341499999999996Q56.873000000000005 32.51 55.52 31.387999999999998Q54.167 30.266 52.055 30.266Q49.910000000000004 30.266 48.557 31.387999999999998Q47.204 32.51 46.560500000000005 34.341499999999996Q45.917 36.173 45.917 38.318Q45.917 40.43 46.560500000000005 42.2615Q47.204 44.093 48.557 45.1985Q49.910000000000004 46.304 52.055 46.304Z" fill="#FFFFFF"/><path d="M65.769 50.0V26.57H70.78500000000001V45.775999999999996H81.57600000000001V50.0Z" fill="#FFFFFF"/>
+        </svg>
+      </div>
+      <h2>Get Nav<span class="ql">QL</span>.</h2>
+      <p>Free for macOS, Windows and Linux. Connect your first database in under a minute.</p>
+      <div class="platforms">
+        <a class="platform" href="#"><strong>macOS</strong><span>Apple Silicon and Intel · .dmg</span><em>Download for Mac →</em></a>
+        <a class="platform" href="#"><strong>Windows</strong><span>Windows 10 and 11 · .exe</span><em>Download for Windows →</em></a>
+        <a class="platform" href="#"><strong>Linux</strong><span>AppImage · .deb</span><em>Download for Linux →</em></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <img src="assets/navql-logo-fundo-escuro.svg" alt="NavQL" width="79" height="24">
+    <p>Database client for MySQL, PostgreSQL, MongoDB and SQLite · © 2026 NavQL</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+    function select(tab, focus) {
+      tabs.forEach(function (t) {
+        var on = t === tab;
+        t.setAttribute('aria-selected', on);
+        t.tabIndex = on ? 0 : -1;
+        document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+      });
+      if (focus) tab.focus();
+    }
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Hero discs gently follow the mouse (parallax)
+    var discs = document.querySelector('.hero-discs');
+    var hero = document.querySelector('.hero');
+    if (discs && hero && !reduce && window.matchMedia('(pointer: fine)').matches) {
+      hero.addEventListener('mousemove', function (e) {
+        var r = hero.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width - .5;
+        var y = (e.clientY - r.top) / r.height - .5;
+        discs.style.setProperty('--px', (x * -24).toFixed(1) + 'px');
+        discs.style.setProperty('--py', (y * -16).toFixed(1) + 'px');
+      });
+      hero.addEventListener('mouseleave', function () {
+        discs.style.setProperty('--px', '0px');
+        discs.style.setProperty('--py', '0px');
+      });
+    }
+
+    // Download icon animates when it scrolls into view
+    var dl = document.querySelector('.download');
+    if (dl && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries, obs) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { dl.classList.add('in-view'); obs.disconnect(); }
+        });
+      }, { threshold: .5 }).observe(dl);
+    }
+
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { select(t); });
+      t.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowRight') select(tabs[(i + 1) % tabs.length], true);
+        if (e.key === 'ArrowLeft') select(tabs[(i - 1 + tabs.length) % tabs.length], true);
+      });
+    });
+  })();
+</script>
+</body>
+</html>
