@@ -346,6 +346,7 @@
         <button role="tab" id="t-data" aria-controls="p-data" aria-selected="false" tabindex="-1"><i style="background:var(--azul)"></i>Data</button>
         <button role="tab" id="t-query" aria-controls="p-query" aria-selected="false" tabindex="-1"><i style="background:var(--violeta)"></i>Queries</button>
         <button role="tab" id="t-struct" aria-controls="p-struct" aria-selected="false" tabindex="-1"><i style="background:#a1a1aa"></i>Structure</button>
+        <button role="tab" id="t-diagram" aria-controls="p-diagram" aria-selected="false" tabindex="-1"><i style="background:var(--ciano)"></i>Diagram</button>
       </div>
 
       <div class="panel" id="p-conn" role="tabpanel" aria-labelledby="t-conn">
@@ -414,6 +415,23 @@
           </div>
         </div>
       </div>
+
+      <div class="panel" id="p-diagram" role="tabpanel" aria-labelledby="t-diagram" hidden>
+        <div class="tour-grid">
+          <div class="window"><div class="window-bar"><i></i><i></i><i></i></div>
+            <img src="assets/shots/diagram.png" alt="Database diagram of a store schema: 15 tables connected by their foreign keys" loading="lazy" width="2880" height="1800"></div>
+          <div class="tour-copy">
+            <h3>Your schema as a diagram</h3>
+            <p>One click draws every table and how they connect, laid out automatically.</p>
+            <ul>
+              <li>Primary and foreign keys with column types</li>
+              <li>Crow's foot lines that show optional relations</li>
+              <li>Drag tables around; NavQL remembers where</li>
+              <li>Export as PNG or SVG</li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -470,6 +488,22 @@
 <span class="k">LIMIT</span> <span class="n">50</span>;</div>
       </div>
       <img class="shot" src="assets/shots/query.png" alt="Result of a query grouped by city in NavQL" loading="lazy" width="2880" height="1800">
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap code-band diagram-band">
+      <img class="shot" src="assets/shots/diagram-focus.png" alt="The orders table selected in the diagram, with its related tables highlighted and the rest faded" loading="lazy" width="2880" height="1800">
+      <div class="tour-copy">
+        <span class="eyebrow">05 — Diagram</span>
+        <h2>See how it all connects.</h2>
+        <p style="color:var(--muted);font-size:17px;margin:0 0 28px">Click a table and NavQL lights up everything it touches, so a new schema makes sense in seconds.</p>
+        <ul>
+          <li>Search for a table and jump straight to it</li>
+          <li>Large schemas open with the most connected tables first</li>
+          <li>Double-click a table to open its data</li>
+        </ul>
+      </div>
     </div>
   </section>
 
