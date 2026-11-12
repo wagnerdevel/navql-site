@@ -273,8 +273,9 @@
     .feature:last-child { border-bottom: 0; grid-column: auto; }
     .dbs ul { gap: 20px; }
     .window-bar { height: 28px; }
-    .tabs { width: 100%; flex-wrap: nowrap; gap: 2px; }
-    .tabs button { flex: 1; justify-content: center; padding: 0 6px; font-size: 13px; gap: 6px; }
+    .tabs { width: 100%; flex-wrap: nowrap; gap: 2px; overflow-x: auto; scrollbar-width: none; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tabs button { flex: none; justify-content: center; padding: 0 12px; font-size: 13px; gap: 6px; }
     .tabs button i { display: none; }
     .code { font-size: 13px; padding: 20px; }
   }
@@ -378,12 +379,13 @@
         <button role="tab" id="t-query" aria-controls="p-query" aria-selected="false" tabindex="-1"><i style="background:var(--violeta)"></i>Queries</button>
         <button role="tab" id="t-struct" aria-controls="p-struct" aria-selected="false" tabindex="-1"><i style="background:#a1a1aa"></i>Structure</button>
         <button role="tab" id="t-diagram" aria-controls="p-diagram" aria-selected="false" tabindex="-1"><i style="background:var(--ciano)"></i>Diagram</button>
+        <button role="tab" id="t-redis" aria-controls="p-redis" aria-selected="false" tabindex="-1"><i style="background:var(--violeta)"></i>Redis</button>
       </div>
 
       <div class="panel" id="p-conn" role="tabpanel" aria-labelledby="t-conn">
         <div class="tour-grid">
           <div class="window"><div class="window-bar"><i></i><i></i><i></i></div>
-            <img src="assets/shots/connections-1440.webp" srcset="assets/shots/connections-1440.webp 1440w, assets/shots/connections.webp 2880w" sizes="(max-width: 960px) 100vw, 800px" alt="NavQL home screen with five connections: PostgreSQL, SQLite, MySQL and MongoDB, each with its own color and tag" loading="lazy" width="2880" height="1800"></div>
+            <img src="assets/shots/connections-1440.webp" srcset="assets/shots/connections-1440.webp 1440w, assets/shots/connections.webp 2880w" sizes="(max-width: 960px) 100vw, 800px" alt="NavQL connection list for the Store project: PostgreSQL, Redis, SQL Server and MongoDB connections, each with its own color and tag" loading="lazy" width="2880" height="1800"></div>
           <div class="tour-copy">
             <h3>Every connection at a glance</h3>
             <p>Each connection gets its own color and tag, so you never mistake production for development.</p>
@@ -402,7 +404,7 @@
       <div class="panel" id="p-data" role="tabpanel" aria-labelledby="t-data" hidden>
         <div class="tour-grid">
           <div class="window"><div class="window-bar"><i></i><i></i><i></i></div>
-            <img src="assets/shots/table-1440.webp" srcset="assets/shots/table-1440.webp 1440w, assets/shots/table.webp 2880w" sizes="(max-width: 960px) 100vw, 800px" alt="Data grid of the customers table with 1,200 rows" loading="lazy" width="2880" height="1800"></div>
+            <img src="assets/shots/value-1440.webp" srcset="assets/shots/value-1440.webp 1440w, assets/shots/value.webp 2880w" sizes="(max-width: 960px) 100vw, 800px" alt="Data grid of the orders table with the JSON of a cell shown as a tree in the side panel" loading="lazy" width="2880" height="1800"></div>
           <div class="tour-copy">
             <h3>Data in a fast grid</h3>
             <p>Open a table and scroll through thousands of rows without a stutter. Edit cells, add rows and apply filters.</p>
@@ -438,7 +440,7 @@
       <div class="panel" id="p-struct" role="tabpanel" aria-labelledby="t-struct" hidden>
         <div class="tour-grid">
           <div class="window"><div class="window-bar"><i></i><i></i><i></i></div>
-            <img src="assets/shots/structure-1440.webp" srcset="assets/shots/structure-1440.webp 1440w, assets/shots/structure.webp 2880w" sizes="(max-width: 960px) 100vw, 800px" alt="Structure of the customers table: columns, types, indexes and foreign keys" loading="lazy" width="2880" height="1800"></div>
+            <img src="assets/shots/structure-1440.webp" srcset="assets/shots/structure-1440.webp 1440w, assets/shots/structure.webp 2880w" sizes="(max-width: 960px) 100vw, 800px" alt="Structure of the orders table: columns, types, indexes and foreign keys" loading="lazy" width="2880" height="1800"></div>
           <div class="tour-copy">
             <h3>Structure, demystified</h3>
             <p>Columns, types, indexes and foreign keys for every table, plus the full DDL.</p>
@@ -464,6 +466,22 @@
               <li>Drag tables around; NavQL remembers where</li>
               <li>Zoom, minimap and a notation legend</li>
               <li>Export as PNG or SVG</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    <div class="panel" id="p-redis" role="tabpanel" aria-labelledby="t-redis" hidden>
+        <div class="tour-grid">
+          <div class="window"><div class="window-bar"><i></i><i></i><i></i></div>
+            <img src="assets/shots/redis-1440.webp" srcset="assets/shots/redis-1440.webp 1440w, assets/shots/redis.webp 2880w" sizes="(max-width: 960px) 100vw, 800px" alt="Redis keys with the session prefix in a grid: key, type, TTL, size and value" loading="lazy" width="2880" height="1800"></div>
+          <div class="tour-copy">
+            <h3>Redis, in the same window</h3>
+            <p>Keys are grouped by prefix and open in the same grid as your tables, next to your SQL connections.</p>
+            <ul>
+              <li>Type, TTL, size and value for every key</li>
+              <li>Edit values and TTLs, applied in one <span class="mono">MULTI</span></li>
+              <li>A redis-cli style command editor</li>
+              <li>Read-only mode that blocks write commands</li>
             </ul>
           </div>
         </div>
