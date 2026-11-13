@@ -234,6 +234,15 @@
   .platform .badge { position: absolute; top: 14px; right: 14px; font: 500 11px/1 var(--mono); color: var(--ciano); border: 1px solid rgba(34,211,238,.35); border-radius: 999px; padding: 5px 8px; }
   .platform em { margin-top: 14px; font-style: normal; color: var(--azul); font-size: 14px; font-weight: 500; }
 
+  /* Agreement before download: the cards stay dimmed until the box is checked */
+  .agree { display: flex; align-items: flex-start; justify-content: center; gap: 10px; max-width: 560px; margin: 0 auto 24px; text-align: left; color: var(--muted); font-size: 14px; line-height: 1.5; cursor: pointer; }
+  .agree input { flex: none; width: 18px; height: 18px; margin: 1px 0 0; accent-color: var(--azul); cursor: pointer; }
+  .agree a { color: var(--papel); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255,255,255,.35); }
+  .agree.nudge { animation: nudge .45s; color: var(--papel); }
+  @keyframes nudge { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+  .platforms.locked .platform:not(.soon) { opacity: .45; }
+  .platforms.locked .platform:not(.soon):hover { border-color: var(--line); transform: none; }
+
   footer { border-top: 1px solid var(--line); padding: 40px 0; }
   footer .wrap { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
   footer img { height: 24px; width: auto; }
@@ -593,7 +602,8 @@
       </div>
       <h2>Get Nav<span class="ql">QL</span>.</h2>
       <p>Free for macOS and Windows. Connect your first database in under a minute.</p>
-      <div class="platforms">
+      <label class="agree" id="agree-label"><input type="checkbox" id="agree"> <span>I have read and agree to the <a href="terms.html">Terms of Use</a> and the <a href="privacy.html">Privacy Policy</a>, including the anonymous usage statistics the app sends (you can turn them off in the app).</span></label>
+      <div class="platforms locked">
         <a class="platform" data-os="mac" href="https://github.com/wagnerdevel/navql-releases/releases/download/v0.4.6/NavQL-0.4.6-arm64.dmg"><strong>macOS</strong><span>Apple Silicon · .dmg</span><em>Download for Mac →</em></a>
         <a class="platform" data-os="win" href="https://github.com/wagnerdevel/navql-releases/releases/download/v0.4.6/NavQL-Setup-0.4.6.exe"><strong>Windows</strong><span>Windows 10 and 11 · .exe</span><em>Download for Windows →</em></a>
         <div class="platform soon" aria-disabled="true"><strong>Linux</strong><span>AppImage · .deb</span><em>Coming soon</em></div>
@@ -607,7 +617,7 @@
   <div class="wrap">
     <img src="assets/navql-logo-fundo-escuro.svg" alt="NavQL" width="79" height="24">
     <p>Database client for MySQL, MariaDB, PostgreSQL, SQL Server, SQLite, MongoDB and Redis · © 2026 NavQL</p>
-    <nav aria-label="Footer"><a href="https://github.com/wagnerdevel/navql-releases/releases">Releases</a><a href="#main">Back to top</a></nav>
+    <nav aria-label="Footer"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="https://github.com/wagnerdevel/navql-releases/releases">Releases</a><a href="#main">Back to top</a></nav>
   </div>
 </footer>
 
@@ -679,6 +689,31 @@
         })
         .catch(function () {});
     }
+
+    // Downloads need the terms accepted; the choice is remembered in this browser only
+    var agree = document.getElementById('agree');
+    var agreeLabel = document.getElementById('agree-label');
+    var platforms = document.querySelector('.platforms');
+    var KEY = 'navql-terms-accepted';
+    function lock() {
+      platforms.classList.toggle('locked', !agree.checked);
+      Array.prototype.forEach.call(platforms.querySelectorAll('a.platform'), function (a) { a.setAttribute('aria-disabled', String(!agree.checked)); });
+    }
+    try { agree.checked = localStorage.getItem(KEY) === '1'; } catch (e) {}
+    lock();
+    agree.addEventListener('change', function () {
+      try { agree.checked ? localStorage.setItem(KEY, '1') : localStorage.removeItem(KEY); } catch (e) {}
+      lock();
+    });
+    platforms.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a.platform');
+      if (!a || agree.checked) return;
+      e.preventDefault();
+      agreeLabel.classList.remove('nudge');
+      void agreeLabel.offsetWidth;
+      agreeLabel.classList.add('nudge');
+      agree.focus();
+    });
 
     // Fade sections up as they enter the viewport
     if (!reduce && 'IntersectionObserver' in window) {

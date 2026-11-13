@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — NavQL</title>
+<meta name="description" content="What NavQL sends over the internet, and what it never does.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="canonical" href="https://wagnerdevel.github.io/navql-site/privacy.html">
+<meta name="theme-color" content="#0A0A0B">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/legal.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="./" aria-label="NavQL — home"><img src="assets/navql-logo-fundo-escuro.svg" alt="NavQL" width="92" height="28"></a>
+    <nav><a href="./#download" class="btn btn-primary">Download</a></nav>
+  </div>
+</header>
+
+<main id="main" class="legal">
+  <div class="wrap">
+    <p class="eyebrow">Legal</p>
+    <h1>Privacy Policy</h1>
+    <p class="updated">Last updated: November 13, 2026</p>
+
+    <p class="lead">NavQL is a database client that runs on your computer. Your connections, passwords, queries and data stay there. This page lists everything the app and this website send over the internet.</p>
+
+    <h2 id="data">Your databases and connections</h2>
+    <p>Saved connections, passwords, SSH keys, saved queries and history are stored only on your computer, in the app's data folder. Passwords and keys are encrypted with a key protected by your operating system (Keychain on macOS). NavQL connects directly from your computer to the databases you configure. None of this is ever sent to us.</p>
+
+    <h2 id="usage">Anonymous usage statistics</h2>
+    <p>To know how many people use NavQL, the desktop app sends a few anonymous events to <a href="https://aptabase.com">Aptabase</a>, a privacy-focused analytics service (servers in the United States):</p>
+    <ul>
+      <li><code>install</code> — once, after the app is installed;</li>
+      <li><code>active_day</code> — at most once per day you use the app;</li>
+      <li><code>active_month</code> — at most once per month you use the app.</li>
+    </ul>
+    <p>Each event carries only the app version, the operating system and its version, the processor architecture (for example arm64) and the interface language.</p>
+    <p><strong>Never sent:</strong> your name, e-mail or any account, connection names, hosts, database names, queries, table data, file names, or any identifier of you or your computer. NavQL does not create or store an ID for analytics, so events from the same computer cannot be linked together. Like any request on the internet, the connection to Aptabase carries your IP address; NavQL does not send it as data, and how Aptabase handles it is described in <a href="https://aptabase.com/legal/privacy">Aptabase's privacy policy</a>.</p>
+    <p><strong>Turning it off:</strong> click the chart button at the bottom of the Connections screen and uncheck <em>Share anonymous usage statistics</em>. On macOS, the same option is in the menu <em>NavQL → Share Anonymous Usage Statistics</em>. While it is off, nothing is sent.</p>
+
+    <h2 id="updates">Update checks</h2>
+    <p>The app checks for new versions when it opens and every six hours, by reading the release information published on GitHub (<code>github.com/wagnerdevel/navql-releases</code>), and downloads new versions from there. These requests contain no personal data; GitHub handles them under the <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">GitHub Privacy Statement</a>.</p>
+
+    <h2 id="ai">AI assistant (optional)</h2>
+    <p>The AI assistant only works if you add your own Anthropic API key, and only sends something when you use it. It then sends, directly from your computer to Anthropic, the structure of the database in use (table and column names, types and keys) and the text of the query editor — never table data. These requests are covered by your agreement with Anthropic and the <a href="https://www.anthropic.com/legal/privacy">Anthropic Privacy Policy</a>.</p>
+
+    <h2 id="site">This website</h2>
+    <p>This site has no cookies, no ads and no analytics. It is hosted by GitHub Pages, which may log visits as described in GitHub's privacy statement. To show the latest version, the page reads public release data from the GitHub API, and it loads its fonts from Google Fonts. If you agree to the terms before downloading, your browser remembers that choice locally; it is never sent anywhere.</p>
+
+    <h2 id="changes">Changes</h2>
+    <p>If what NavQL sends changes, this page will be updated before the version that changes it is released, and the date above will change.</p>
+
+    <p class="back"><a href="terms.html">Terms of Use</a> · <a href="./">Back to NavQL</a></p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <img src="assets/navql-logo-fundo-escuro.svg" alt="NavQL" width="79" height="24">
+    <p>© 2026 NavQL</p>
+    <nav aria-label="Footer"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="https://github.com/wagnerdevel/navql-releases/releases">Releases</a></nav>
+  </div>
+</footer>
+</body>
+</html>
