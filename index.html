@@ -3,20 +3,27 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NavQL — Navigate all your data</title>
-<meta name="description" content="NavQL is a database client for MySQL, MariaDB, PostgreSQL, SQL Server, SQLite, MongoDB and Redis. Browse tables and collections, edit records and run queries, fast.">
+<title>NavQL — Free database client for PostgreSQL, MySQL, MongoDB and Redis</title>
+<meta name="description" content="NavQL is a free database client for macOS and Windows. Browse, edit and query PostgreSQL, MySQL, SQL Server, MongoDB, Redis and more in one fast app.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="canonical" href="https://navql.com/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://navql.com/">
-<meta property="og:title" content="NavQL — Navigate all your data">
+<meta property="og:site_name" content="NavQL">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="NavQL — Free database client for PostgreSQL, MySQL, MongoDB and Redis">
 <meta property="og:image" content="https://navql.com/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="NavQL showing a PostgreSQL table on macOS">
 <meta name="twitter:card" content="summary_large_image">
-<meta property="og:description" content="All your databases, one place. MySQL, MariaDB, PostgreSQL, SQL Server, SQLite, MongoDB and Redis.">
+<meta name="twitter:title" content="NavQL — Free database client for PostgreSQL, MySQL, MongoDB and Redis">
+<meta name="twitter:description" content="NavQL is a free database client for macOS and Windows. Browse, edit and query PostgreSQL, MySQL, SQL Server, MongoDB, Redis and more in one fast app.">
+<meta name="twitter:image" content="https://navql.com/assets/og.png">
+<meta property="og:description" content="NavQL is a free database client for macOS and Windows. Browse, edit and query PostgreSQL, MySQL, SQL Server, MongoDB, Redis and more in one fast app.">
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "NavQL", "url": "https://navql.com/", "image": "https://navql.com/assets/og.png", "description": "NavQL is a free database client for macOS and Windows. Browse, edit and query PostgreSQL, MySQL, SQL Server, MongoDB, Redis and more in one fast app.", "applicationCategory": "DeveloperApplication", "applicationSubCategory": "Database client", "operatingSystem": "macOS, Windows", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "downloadUrl": "https://navql.com/#download", "screenshot": ["https://navql.com/assets/shots/table.webp", "https://navql.com/assets/shots/query.webp", "https://navql.com/assets/shots/diagram.webp"], "featureList": ["PostgreSQL, MySQL, MariaDB, SQL Server, SQLite, MongoDB and Redis", "SQL editor with autocomplete", "Database diagram", "SSH tunnel and SSL", "Backups", "AI assistant"]}, {"@context": "https://schema.org", "@type": "WebSite", "name": "NavQL", "url": "https://navql.com/"}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is NavQL free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. NavQL is free of charge for personal and commercial work, on any number of your own computers. It is not open source."}}, {"@type": "Question", "name": "Which databases does NavQL support?", "acceptedAnswer": {"@type": "Answer", "text": "PostgreSQL, MySQL, MariaDB, SQL Server, SQLite, MongoDB and Redis. It also connects to compatible servers such as CockroachDB, TimescaleDB, Supabase, Neon, TiDB, Valkey and Dragonfly."}}, {"@type": "Question", "name": "Does NavQL run on Mac, Windows and Linux?", "acceptedAnswer": {"@type": "Answer", "text": "NavQL runs on macOS (Apple Silicon) and on Windows 10 and 11. A Linux version is planned."}}, {"@type": "Question", "name": "Where are my connections and passwords stored?", "acceptedAnswer": {"@type": "Answer", "text": "Only on your computer. Passwords and SSH keys are encrypted with a key protected by your operating system, and NavQL connects directly from your computer to your databases. Nothing about your connections, queries or data is sent to us."}}, {"@type": "Question", "name": "Can I reach a database on a private network?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Every connection can use a built-in SSH tunnel and SSL, so you can reach databases that are not open to the internet."}}, {"@type": "Question", "name": "How does the AI assistant work?", "acceptedAnswer": {"@type": "Answer", "text": "It is optional and uses your own Anthropic API key. When you ask it to write or explain SQL, it sends the structure of your database (table and column names, types and keys) and the text of the editor, never the data in your tables."}}, {"@type": "Question", "name": "How do I update NavQL?", "acceptedAnswer": {"@type": "Answer", "text": "You do not have to. NavQL checks for new versions on its own, downloads them in the background and installs them when you restart the app."}}]}]</script>
 <meta name="theme-color" content="#0A0A0B">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -150,6 +157,7 @@
   .dbs p { margin: 0; font: 400 13px/1 var(--mono); color: var(--dim); }
   .dbs ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 36px; flex-wrap: wrap; }
   .dbs li { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 17px; }
+  .dbs .compat { flex-basis: 100%; font: 400 14px/1.5 var(--sans); color: var(--muted); }
   .dbs li i { width: 10px; height: 10px; border-radius: 50%; }
 
   /* Sections */
@@ -194,6 +202,16 @@
   .feature .ico svg { width: 20px; height: 20px; }
   .feature h3 { font: 600 17px/1.3 var(--sans); margin: 0 0 8px; }
   .feature p { margin: 0; color: var(--muted); font-size: 15px; }
+
+  /* FAQ */
+  .faq { max-width: 820px; border-top: 1px solid var(--line); }
+  .faq details { border-bottom: 1px solid var(--line); }
+  .faq summary { list-style: none; cursor: pointer; padding: 20px 36px 20px 0; position: relative; font: 600 17px/1.4 var(--sans); }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; position: absolute; right: 4px; top: 16px; font: 400 22px/1.4 var(--mono); color: var(--ciano); }
+  .faq details[open] summary::after { content: "−"; }
+  .faq summary:focus-visible { outline: 2px solid var(--azul); outline-offset: 3px; border-radius: 6px; }
+  .faq p { margin: 0 0 22px; color: var(--muted); font-size: 15px; max-width: 700px; }
 
   /* Code */
   .code-band { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
@@ -291,6 +309,7 @@
     <nav>
       <a href="#tour">Tour</a>
       <a href="#features">Features</a>
+      <a href="#faq">FAQ</a>
       <a href="#download" class="btn btn-primary">Download</a>
     </nav>
   </div>
@@ -307,7 +326,7 @@
       <div class="hero-copy">
         <span class="eyebrow">Database client · macOS and Windows</span>
         <h1>Navigate all your data.</h1>
-        <p class="lead">MySQL, PostgreSQL, SQL Server, MongoDB, Redis and more in one clean, focused place. Browse tables and collections, edit records and run queries, fast.</p>
+        <p class="lead">A free database client for MySQL, PostgreSQL, SQL Server, MongoDB, Redis and more, in one clean, focused place. Browse tables and collections, edit records and run queries, fast.</p>
         <div class="ctas">
           <a href="#download" class="btn btn-primary btn-lg">Download NavQL</a>
           <a href="#tour" class="btn btn-ghost btn-lg">See the app</a>
@@ -334,6 +353,7 @@
         <li><i style="background:var(--violeta)"></i>MongoDB</li>
         <li><i style="background:var(--violeta)"></i>Redis</li>
       </ul>
+      <p class="compat">Also works with compatible servers: CockroachDB, TimescaleDB, Supabase, Neon, TiDB, Valkey and Dragonfly.</p>
     </div>
   </div>
 
@@ -593,6 +613,24 @@
     </div>
   </section>
 
+  <section id="faq" style="padding-top:0">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">07 — Questions</span>
+        <h2>Good to know.</h2>
+      </div>
+      <div class="faq">
+        <details><summary>Is NavQL free?</summary><p>Yes. NavQL is free of charge for personal and commercial work, on any number of your own computers. It is not open source.</p></details>
+        <details><summary>Which databases does NavQL support?</summary><p>PostgreSQL, MySQL, MariaDB, SQL Server, SQLite, MongoDB and Redis. It also connects to compatible servers such as CockroachDB, TimescaleDB, Supabase, Neon, TiDB, Valkey and Dragonfly.</p></details>
+        <details><summary>Does NavQL run on Mac, Windows and Linux?</summary><p>NavQL runs on macOS (Apple Silicon) and on Windows 10 and 11. A Linux version is planned.</p></details>
+        <details><summary>Where are my connections and passwords stored?</summary><p>Only on your computer. Passwords and SSH keys are encrypted with a key protected by your operating system, and NavQL connects directly from your computer to your databases. Nothing about your connections, queries or data is sent to us.</p></details>
+        <details><summary>Can I reach a database on a private network?</summary><p>Yes. Every connection can use a built-in SSH tunnel and SSL, so you can reach databases that are not open to the internet.</p></details>
+        <details><summary>How does the AI assistant work?</summary><p>It is optional and uses your own Anthropic API key. When you ask it to write or explain SQL, it sends the structure of your database (table and column names, types and keys) and the text of the editor, never the data in your tables.</p></details>
+        <details><summary>How do I update NavQL?</summary><p>You do not have to. NavQL checks for new versions on its own, downloads them in the background and installs them when you restart the app.</p></details>
+      </div>
+    </div>
+  </section>
+
   <section class="download" id="download">
     <div class="wrap">
       <div class="icon-wrap">
@@ -623,7 +661,7 @@
 <footer>
   <div class="wrap">
     <img src="assets/navql-logo-fundo-escuro.svg" alt="NavQL" width="79" height="24">
-    <p>Database client for MySQL, MariaDB, PostgreSQL, SQL Server, SQLite, MongoDB and Redis · © 2026 NavQL</p>
+    <p>Free database client for MySQL, MariaDB, PostgreSQL, SQL Server, SQLite, MongoDB and Redis · © 2026 NavQL</p>
     <nav aria-label="Footer"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="https://github.com/wagnerdevel/navql-releases/releases">Releases</a><a href="#main">Back to top</a></nav>
   </div>
 </footer>
