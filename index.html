@@ -135,17 +135,10 @@
   .hero-shot { position: relative; margin-top: 72px; }
 
   /* App window */
-  .window {
-    border-radius: 14px; overflow: hidden;
-    background: var(--grafite);
-    border: 1px solid var(--line-strong);
-    box-shadow: 0 40px 120px -30px rgba(79,124,255,.35), 0 0 0 1px rgba(0,0,0,.4);
+  /* The screenshots are real macOS windows: their own title bar, rounded corners with transparency. */
+  .window img, .code-band img.shot {
+    filter: drop-shadow(0 0 1px rgba(255,255,255,.28)) drop-shadow(0 36px 60px rgba(79,124,255,.22));
   }
-  .window-bar { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border-bottom: 1px solid var(--line); background: #141417; }
-  .window-bar i { width: 11px; height: 11px; border-radius: 50%; background: #3f3f46; }
-  .window-bar span { margin-left: 10px; font: 500 12px/1 var(--sans); color: var(--muted); display: flex; align-items: center; gap: 6px; }
-  .window-bar span img { width: 14px; height: 14px; }
-  .hero-shot .window { border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-bottom: 0; }
   .hero-shot::after {
     content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 35%;
     background: linear-gradient(to bottom, rgba(10,10,11,0), var(--onix));
@@ -212,7 +205,6 @@
   .code .t { color: var(--ciano); }
   .code .n { color: var(--violeta); }
   .code .s { color: var(--azul); }
-  .code-band img.shot { border-radius: 14px; border: 1px solid var(--line-strong); }
 
   /* Download */
   .download { text-align: center; position: relative; overflow: hidden; }
@@ -281,7 +273,6 @@
     .feature, .feature:nth-child(n) { border-right: 0; border-bottom: 1px solid var(--line); }
     .feature:last-child { border-bottom: 0; grid-column: auto; }
     .dbs ul { gap: 20px; }
-    .window-bar { height: 28px; }
     .tabs { width: 100%; flex-wrap: nowrap; gap: 2px; overflow-x: auto; scrollbar-width: none; }
     .tabs::-webkit-scrollbar { display: none; }
     .tabs button { flex: none; justify-content: center; padding: 0 12px; font-size: 13px; gap: 6px; }
@@ -325,8 +316,7 @@
       </div>
       <div class="hero-shot">
         <div class="window">
-          <div class="window-bar"><i></i><i></i><i></i><span><img src="assets/navql-icone.svg" alt="">NavQL</span></div>
-          <img src="assets/shots/table-1440.webp" srcset="assets/shots/table-1440.webp 1440w, assets/shots/table.webp 2880w" sizes="(max-width: 1180px) 100vw, 1132px" fetchpriority="high" alt="NavQL showing the customers table of a PostgreSQL database, with the list of tables and views on the left" width="2880" height="1800">
+          <img src="assets/shots/table-1440.webp" srcset="assets/shots/table-1440.webp 1440w, assets/shots/table.webp 2880w" sizes="(max-width: 1180px) 100vw, 1132px" fetchpriority="high" alt="NavQL on macOS showing the customers table of a PostgreSQL database, with the list of tables and views on the left" width="2880" height="1800">
         </div>
       </div>
     </div>
@@ -393,7 +383,7 @@
 
       <div class="panel" id="p-conn" role="tabpanel" aria-labelledby="t-conn">
         <div class="tour-grid">
-          <div class="window"><div class="window-bar"><i></i><i></i><i></i></div>
+          <div class="window">
             <img src="assets/shots/connections-1440.webp" srcset="assets/shots/connections-1440.webp 1440w, assets/shots/connections.webp 2880w" sizes="(max-width: 960px) 100vw, 800px" alt="NavQL connection list for the Store project: PostgreSQL, Redis, SQL Server and MongoDB connections, each with its own color and tag" loading="lazy" width="2880" height="1800"></div>
           <div class="tour-copy">
             <h3>Every connection at a glance</h3>
@@ -412,7 +402,7 @@
 
       <div class="panel" id="p-data" role="tabpanel" aria-labelledby="t-data" hidden>
         <div class="tour-grid">
-          <div class="window"><div class="window-bar"><i></i><i></i><i></i></div>
+          <div class="window">
             <img src="assets/shots/value-1440.webp" srcset="assets/shots/value-1440.webp 1440w, assets/shots/value.webp 2880w" sizes="(max-width: 960px) 100vw, 800px" alt="Data grid of the orders table with the JSON of a cell shown as a tree in the side panel" loading="lazy" width="2880" height="1800"></div>
           <div class="tour-copy">
             <h3>Data in a fast grid</h3>
@@ -430,7 +420,7 @@
 
       <div class="panel" id="p-query" role="tabpanel" aria-labelledby="t-query" hidden>
         <div class="tour-grid">
-          <div class="window"><div class="window-bar"><i></i><i></i><i></i></div>
+          <div class="window">
             <img src="assets/shots/query-1440.webp" srcset="assets/shots/query-1440.webp 1440w, assets/shots/query.webp 2880w" sizes="(max-width: 960px) 100vw, 800px" alt="Query editor with a SELECT grouping revenue by city and the result below" loading="lazy" width="2880" height="1800"></div>
           <div class="tour-copy">
             <h3>A real SQL editor</h3>
@@ -448,7 +438,7 @@
 
       <div class="panel" id="p-struct" role="tabpanel" aria-labelledby="t-struct" hidden>
         <div class="tour-grid">
-          <div class="window"><div class="window-bar"><i></i><i></i><i></i></div>
+          <div class="window">
             <img src="assets/shots/structure-1440.webp" srcset="assets/shots/structure-1440.webp 1440w, assets/shots/structure.webp 2880w" sizes="(max-width: 960px) 100vw, 800px" alt="Structure of the orders table: columns, types, indexes and foreign keys" loading="lazy" width="2880" height="1800"></div>
           <div class="tour-copy">
             <h3>Structure, demystified</h3>
@@ -464,7 +454,7 @@
 
       <div class="panel" id="p-diagram" role="tabpanel" aria-labelledby="t-diagram" hidden>
         <div class="tour-grid">
-          <div class="window"><div class="window-bar"><i></i><i></i><i></i></div>
+          <div class="window">
             <img src="assets/shots/diagram-1440.webp" srcset="assets/shots/diagram-1440.webp 1440w, assets/shots/diagram.webp 2880w" sizes="(max-width: 960px) 100vw, 800px" alt="Database diagram of a store schema: 15 tables connected by their foreign keys" loading="lazy" width="2880" height="1800"></div>
           <div class="tour-copy">
             <h3>Your schema as a diagram</h3>
@@ -481,7 +471,7 @@
       </div>
     <div class="panel" id="p-redis" role="tabpanel" aria-labelledby="t-redis" hidden>
         <div class="tour-grid">
-          <div class="window"><div class="window-bar"><i></i><i></i><i></i></div>
+          <div class="window">
             <img src="assets/shots/redis-1440.webp" srcset="assets/shots/redis-1440.webp 1440w, assets/shots/redis.webp 2880w" sizes="(max-width: 960px) 100vw, 800px" alt="Redis keys with the session prefix in a grid: key, type, TTL, size and value" loading="lazy" width="2880" height="1800"></div>
           <div class="tour-copy">
             <h3>Redis, in the same window</h3>
@@ -583,6 +573,23 @@
           <li>Double-click a table to open its data</li>
         </ul>
       </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap code-band">
+      <div class="tour-copy">
+        <span class="eyebrow">06 — macOS</span>
+        <h2>At home on the Mac.</h2>
+        <p style="color:var(--muted);font-size:17px;margin:0 0 28px">NavQL is a real Mac app, with a window that looks and behaves like the rest of your system.</p>
+        <ul>
+          <li>Light and dark themes, or follow the system</li>
+          <li>Translucent sidebar and toolbar</li>
+          <li>Window controls in the toolbar, with no title bar taking up space</li>
+          <li>Built for Apple Silicon</li>
+        </ul>
+      </div>
+      <img class="shot" src="assets/shots/table-light-1440.webp" srcset="assets/shots/table-light-1440.webp 1440w, assets/shots/table-light.webp 2880w" sizes="(max-width: 960px) 100vw, 560px" alt="NavQL on macOS in the light theme, showing the customers table" loading="lazy" width="2880" height="1800">
     </div>
   </section>
 
